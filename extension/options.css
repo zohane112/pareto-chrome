@@ -100,7 +100,6 @@ input[type=radio], input[type=checkbox] { accent-color: var(--fg); width: 15px; 
 .choices label:has(input:checked) input { accent-color: var(--on-inv); }
 .check { display: flex; gap: 8px; align-items: center; font-size: 14px; cursor: pointer; color: var(--soft); }
 .check input { margin: 0; }
-body.plan-free .ai-only { opacity: 0.5; }
 .keys { display: grid; grid-template-columns: auto 1fr; gap: 9px 18px; margin: 0 0 16px; font-size: 14px; color: var(--soft); }
 .keys dt { white-space: nowrap; color: var(--fg); font-family: var(--mono); font-size: 13px; }
 .keys dd { margin: 0; }

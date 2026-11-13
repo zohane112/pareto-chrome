@@ -22,18 +22,8 @@
       <button type="button" class="try-it">Try it on a test page</button>
     </div>
 
-    <section class="card">
-      <h2>Plan</h2>
-      <fieldset class="choices">
-        <legend class="sr">Plan</legend>
-        <label><input type="radio" name="plan" value="free"> <span><b>Free</b><br>Find words on the page as you type, like normal Ctrl+F. Runs on this computer, and nothing is sent anywhere.</span></label>
-        <label><input type="radio" name="plan" value="ai"> <span><b>AI plan</b><br>Everything in Free, plus search by meaning with Jev or Nemotron, short AI answers, and think harder.</span></label>
-      </fieldset>
-      <p class="small"><a href="#" id="upgrade">See the AI plan ↗</a></p>
-    </section>
-
     <section class="card ai-only">
-      <h2>Jev API key <span class="pill">AI plan</span></h2>
+      <h2>Jev API key <span class="pill">optional</span></h2>
       <p>Jev finds the answer on the page, fast. Without a Jev key, Nemotron finds it instead. Get a key at <a href="https://console.typesafe.ai/keys" target="_blank" rel="noopener">console.typesafe.ai/keys</a>: sign in, click <b>+ Create key</b>, name it, click <b>Create key</b>, and copy it (it starts with <code>apikey_</code>). It's saved only in this browser, on this computer.</p>
       <form id="jev-form" class="row" autocomplete="off">
         <label class="field"><span class="sr">Jev key</span><input id="jev-key" type="password" spellcheck="false" placeholder="Paste key"></label>
@@ -43,7 +33,7 @@
     </section>
 
     <section class="card ai-only">
-      <h2>Nebius key, for NVIDIA Nemotron <span class="pill">AI plan</span></h2>
+      <h2>Nebius key, for NVIDIA Nemotron <span class="pill">optional</span></h2>
       <p>Nemotron is NVIDIA's family of open models, run by Nebius Token Factory. Pareto uses three of them:</p>
       <ul class="models">
         <li><b>Nemotron 3 Super</b> writes the short answer after each search.</li>
@@ -79,7 +69,7 @@
     </section>
 
     <section class="card ai-only">
-      <h2>AI answers <span class="pill">AI plan</span></h2>
+      <h2>AI answers <span class="pill">optional</span></h2>
       <p>After each search, an AI writes a short answer from the best-matching part of the page. It's sent the question and those excerpts only.</p>
       <fieldset class="choices">
         <legend class="sr">Who answers</legend>
@@ -96,7 +86,7 @@
     </section>
 
     <section class="card ai-only" id="hosted-card">
-      <h2>Hosted AI key <span class="pill">AI plan</span></h2>
+      <h2>Hosted AI key <span class="pill">optional</span></h2>
       <p>The key for the AI service that writes the answers. It's saved only in this browser, on this computer, and is sent to the endpoint below and nowhere else.</p>
       <form id="hosted-form" class="row" autocomplete="off">
         <label class="field"><span class="sr">Hosted AI key</span><input id="hosted-key" type="password" spellcheck="false" placeholder="Paste key"></label>
@@ -132,7 +122,7 @@
       <dl class="keys">
         <dt><kbd id="shortcut">…</kbd></dt><dd>Open the box on any normal website: the <b>Control</b> key, not ⌘ Command. Or click the toolbar icon.</dd>
         <dt>Type</dt><dd>Words light up on the page as you type, like normal Ctrl+F</dd>
-        <dt><kbd>Enter</kbd></dt><dd>AI plan: search by meaning. Free: next word match.</dd>
+        <dt><kbd>Enter</kbd></dt><dd>With a Jev or Nebius key: search by meaning. Without one: next word match.</dd>
         <dt><kbd id="deep-key-2">⌘ Enter</kbd></dt><dd>Think harder: Nemotron 3 Ultra reads the whole page, answers, and highlights the parts it used</dd>
         <dt><kbd>↑</kbd> <kbd>↓</kbd></dt><dd>Step through the matches</dd>
         <dt><kbd>Shift</kbd> <kbd>↑</kbd> <kbd>↓</kbd></dt><dd>Step through word-for-word matches</dd>
@@ -145,7 +135,7 @@
       </div>
     </section>
 
-    <footer class="foot">Extension ID <code id="ext-id"></code> · On the free plan nothing leaves this computer. On the AI plan, page text goes only to Jev, to Nebius (Nemotron), and to the AI you pick above. Keys are kept in this browser and are never shown again once saved.</footer>
+    <footer class="foot">Extension ID <code id="ext-id"></code> · With no key saved, nothing leaves this computer. With a key, page text goes only to Jev, to Nebius (Nemotron), and to the AI you pick above. Keys are kept in this browser and are never shown again once saved.</footer>
   </main>
   <script src="options.js"></script>
 </body>

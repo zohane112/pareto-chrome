@@ -8,7 +8,7 @@
 // It also opens the box in a tab that was already open before the extension loaded, which is
 // what happens right after an install or a reload. Then it checks, still without Jev:
 //   - typing lights up word matches before Enter, like normal Ctrl+F
-//   - on the free plan, Enter steps through word matches, and the worker refuses to ask Jev
+//   - with no key, Enter steps through word matches, and the worker refuses to ask Jev
 
 import { spawn } from "node:child_process";
 import { mkdtempSync, rmSync, cpSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
@@ -138,7 +138,7 @@ try {
   const old = await time(before.sessionId, viaWorker(BEFORE));
   console.log(`Tab opened before the extension loaded: ${old == null ? "didn't open" : `${old} ms`}`);
 
-  // Typing, and the free plan.
+  // Typing, and no key saved.
   let failures = 0;
   const check = (ok, label) => { if (!ok) failures++; console.log(`${ok ? "✓" : "✗"} ${label}`); };
   const lit = (name) => evaluate(`CSS.highlights.get(${JSON.stringify(name)})?.size ?? 0`, page.sessionId);
@@ -154,7 +154,7 @@ try {
   check(await lit("ctrlf-word") > 0 && await lit("ctrlf-word-now") === 1, `typing "Kasparov" lights up ${await lit("ctrlf-word")} matches before Enter`);
   await closeBox(page.sessionId);
 
-  await evaluate(`chrome.storage.local.set({ plan: "free" }).then(() => "ok")`, sw);
+  await evaluate(`chrome.storage.local.remove(["jevApiKey", "nebiusApiKey"]).then(() => "ok")`, sw);
   await time(page.sessionId, viaWorker(PAGE));
   await sleep(100);
   await send("Input.insertText", { text: "Kasparov" }, page.sessionId);
@@ -162,9 +162,9 @@ try {
   const firstNow = await evaluate(`[...CSS.highlights.get("ctrlf-word-now")][0].getBoundingClientRect().top + scrollY`, page.sessionId);
   await enter();
   const secondNow = await evaluate(`[...CSS.highlights.get("ctrlf-word-now")][0].getBoundingClientRect().top + scrollY`, page.sessionId);
-  check(firstNow !== secondNow && await lit("ctrlf-match") === 0, "free plan: Enter steps to the next word match, with no meaning search");
+  check(firstNow !== secondNow && await lit("ctrlf-match") === 0, "no key: Enter steps to the next word match, with no meaning search");
   const refused = await evaluate(`HANDLERS.search({ question: "x", chunks: [] }).then(() => "allowed", (e) => e.code)`, sw);
-  check(refused === "free-plan", `free plan: the worker refuses to ask Jev (${refused})`);
+  check(refused === "free-plan", `no key: the worker refuses to ask Jev (${refused})`);
   await closeBox(page.sessionId);
   if (failures) process.exitCode = 1;
 } catch (err) {

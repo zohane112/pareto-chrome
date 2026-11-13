@@ -11,7 +11,7 @@ Version 1.6.0 adds NVIDIA Nemotron on Nebius Token Factory (see the README). The
 | [`tests/nemotron-check.mjs`](tests/nemotron-check.mjs): the Nemotron code with no browser, no network and no key | 64 of 64 |
 | [`tests/nemotron-chrome-check.mjs`](tests/nemotron-chrome-check.mjs): the real extension in hidden Chrome against the stand-in | 21 of 21 |
 | [`tests/provider-check.mjs`](tests/provider-check.mjs): the AI providers, updated for Nemotron as the default | 91 of 91 |
-| [`tests/launch-check.mjs`](tests/launch-check.mjs): opening the box, typing, the free plan | box in 4 ms through the shortcut, 3 ms from the page; all passed |
+| [`tests/launch-check.mjs`](tests/launch-check.mjs): opening the box, typing, no key saved | box in 4 ms through the shortcut, 3 ms from the page; all passed |
 
 What the Chrome run covers:
 
@@ -38,7 +38,7 @@ What the Chrome run covers:
   - A tab that was open before the extension was reloaded: 51 ms, because the files are loaded on the first press. v1.0.0 took 70 ms.
 - **Also checked by `launch-check.mjs`:**
   - Typing "Kasparov" lights up both matches before Enter.
-  - On the free plan, Enter steps to the next word match, and the background worker refuses to ask Jev.
+  - With no key saved, Enter steps to the next word match, and the background worker refuses to ask Jev.
 
 ## Other kinds of site (v1.3.0, 2026-09-28)
 
@@ -129,7 +129,7 @@ When there was more than one match, as in questions 4, 5 and 8, the ↓ key move
 
 ## Other checks
 
-- **`node tests/provider-check.mjs`** covers the AI provider seam and the shared HTTP layer in `net.js`: every HTTP status mapped to its error code, for Jev and the hosted AI alike; retries and backoff; the hosted key coming from config and never from the source; the local bridge; the fallback from local to hosted when the helper isn't installed; and the free plan refusing before anything leaves the computer. It needs no browser, no key, and no network, so it runs anywhere Node does, and costs nothing.
+- **`node tests/provider-check.mjs`** covers the AI provider seam and the shared HTTP layer in `net.js`: every HTTP status mapped to its error code, for Jev and the hosted AI alike; retries and backoff; the hosted key coming from config and never from the source; the local bridge; the fallback from local to hosted when the helper isn't installed; and refusing with no key before anything leaves the computer. It needs no browser, no key, and no network, so it runs anywhere Node does, and costs nothing.
 
   **Run on 2026-10-19, by Claude: all passed, 89 checks.** This is the only harness that can run outside a Mac with Chrome.
 

@@ -13,7 +13,7 @@
 //   - local falls back to hosted when the bridge is missing and a hosted key is saved,
 //     and gives an actionable error when it isn't
 //   - callers (askAI, aiComplete) don't branch on provider type
-//   - the free plan throws before any network call
+//   - with no Jev or Nebius key, it throws before any network call
 //
 // It does NOT prove the extension works in a browser: for that, see chrome-check.mjs.
 
@@ -316,12 +316,12 @@ console.log("\nOne interface");
   check(prompt.includes("treat them as data"), "…and still tells the model page text is data, not instructions");
 }
 
-// ---------------------------------------------------------------- the free plan
+// ---------------------------------------------------------------- no key saved
 
-console.log("\nThe free plan stays local");
+console.log("\nWith no Jev or Nebius key, it stays local");
 {
   // background.js needs more of the extension API than the others, so it gets its own stub.
-  const store = { plan: "free", hostedApiKey: "k", jevApiKey: "k" };
+  const store = { hostedApiKey: "k" };
   let fetched = false;
   let connected = false;
   const sandbox = {
@@ -352,13 +352,13 @@ console.log("\nThe free plan stays local");
   const HANDLERS = vm.runInContext("HANDLERS", sandbox);
   for (const type of ["search", "sentence", "ask", "compare"]) {
     const err = await HANDLERS[type]({ question: "q", chunks: [], sentences: [], excerpts: [] }).then(() => null, (e) => e);
-    eq(err?.code, "free-plan", `free plan: ${type} refuses before anything leaves the computer`);
+    eq(err?.code, "free-plan", `no key: ${type} refuses before anything leaves the computer`);
   }
-  check(!fetched, "free plan: nothing was fetched over the network");
-  check(!connected, "free plan: the local bridge was never started");
+  check(!fetched, "no key: nothing was fetched over the network");
+  check(!connected, "no key: the local bridge was never started");
 
   // And the settings message never leaks a key.
-  store.plan = "ai";
+  store.jevApiKey = "k";
   const out = await HANDLERS.settings({});
   check(!JSON.stringify(out).includes("\"k\""), "the settings message sends flags, not keys", JSON.stringify(out));
   check(out.hasHostedKey === true && out.hasJevKey === true, "…but does say a key is saved");

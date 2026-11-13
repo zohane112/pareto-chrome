@@ -23,33 +23,30 @@ const DEFAULTS = { ...CtrlF.AI_DEFAULTS, aiAuto: true };
 const SETTING_KEYS = [
   "jevApiKey", "nebiusApiKey", "hostedApiKey",
   "nebiusBaseUrl", "nebiusFastModel", "nebiusAnswerModel", "nebiusDeepModel",
-  "hostedBaseUrl", "hostedModel", "aiProvider", "aiAuto", "plan",
+  "hostedBaseUrl", "hostedModel", "aiProvider", "aiAuto",
 ];
 
-// Our page about the AI plan, where the box's and the settings page's upgrade links go.
-// For now it's a private Claude artifact that only its owner can open until they share it.
-const UPGRADE_URL = "https://claude.ai/artifact/2w17FYYvgxQPHXwvAoF3pd#plans";
-
-// Plans: "free" is word-for-word find on this computer; "ai" adds meaning search (Jev, or
-// Nemotron) and AI answers. There are no payments yet: it's a switch in settings. Someone who
-// has saved a Jev or Nebius key starts on the AI plan, so nothing they set up is hidden.
+// Meaning search (Jev, or Nemotron) and AI answers turn on when a Jev or Nebius key is saved.
+// With neither, it's word-for-word find on this computer and nothing is sent anywhere.
+// A "plan" saved by 1.6.0 or earlier isn't used any more.
+chrome.storage.local.remove("plan");
 // A Claude API key saved by 1.4.0 or earlier isn't used any more, so it isn't kept.
 chrome.storage.local.remove("anthropicApiKey");
 
 async function settings() {
   const saved = await chrome.storage.local.get(SETTING_KEYS);
   const s = { ...DEFAULTS, ...Object.fromEntries(Object.entries(saved).filter(([, v]) => v !== undefined && v !== "")) };
-  s.plan = s.plan === "ai" || s.plan === "free" ? s.plan : s.jevApiKey || s.nebiusApiKey ? "ai" : "free";
+  s.plan = s.jevApiKey || s.nebiusApiKey ? "ai" : "free";
   // "anthropic" was an answer option until 1.4.1 and is gone. Anything unrecognised, including
   // that, becomes the default. "local" is kept for everyone already using the bridge.
   if (!["nemotron", "hosted", "local", "off"].includes(s.aiProvider)) s.aiProvider = DEFAULTS.aiProvider;
   return s;
 }
 
-// Jev and the AI are only asked on the AI plan.
+// Jev and the AI are only asked once a Jev or Nebius key is saved.
 async function aiPlanSettings() {
   const s = await settings();
-  if (s.plan !== "ai") throw Object.assign(new Error("Meaning search is part of the AI plan."), { code: "free-plan" });
+  if (s.plan !== "ai") throw Object.assign(new Error("Search by meaning needs a Jev or Nebius key."), { code: "free-plan" });
   return s;
 }
 
@@ -185,10 +182,6 @@ const HANDLERS = {
   },
   async openSettings() {
     await chrome.runtime.openOptionsPage();
-    return true;
-  },
-  async openUpgrade() {
-    await chrome.tabs.create({ url: UPGRADE_URL });
     return true;
   },
 };

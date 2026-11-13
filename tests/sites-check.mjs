@@ -118,12 +118,12 @@ try {
     const { result: global } = await send("Runtime.evaluate", { expression: "globalThis" }, sw);
     await send("Runtime.callFunctionOn", {
       objectId: global.objectId, awaitPromise: true, returnByValue: true,
-      functionDeclaration: "function (key) { return chrome.storage.local.set({ jevApiKey: key, aiAuto: false, aiProvider: 'off', plan: 'ai' }).then(() => 'saved'); }",
+      functionDeclaration: "function (key) { return chrome.storage.local.set({ jevApiKey: key, aiAuto: false, aiProvider: 'off' }).then(() => 'saved'); }",
       arguments: [{ value: KEY }],
     }, sw);
     await evaluate(`globalThis.__jevTokens = 0; const realFetch = fetch; globalThis.fetch = async (...a) => { const r = await realFetch(...a); if (r.ok && String(a[0]).includes("typesafe")) r.clone().json().then((j) => { globalThis.__jevTokens += j.usage?.input_tokens ?? 0; }).catch(() => {}); return r; }; "ok"`, sw);
   } else {
-    await evaluate(`chrome.storage.local.set({ plan: 'free' }).then(() => "ok")`, sw);
+    await evaluate(`chrome.storage.local.remove(['jevApiKey', 'nebiusApiKey']).then(() => "ok")`, sw);
   }
 
   for (const site of SITES) {

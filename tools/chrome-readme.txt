@@ -16,18 +16,17 @@ Use it
 On any website, press Control+Shift+F (the Control key, not Command), or click its icon.
 Type a word and it lights up on the page, like normal Ctrl+F.
 
-Search by meaning (AI plan)
+Search by meaning (optional)
 You need a Nebius key (for NVIDIA Nemotron), a Jev key, or both. With only a Nebius key,
 everything works. Adding a Jev key makes finding the answer faster.
 
 Nebius key, for NVIDIA Nemotron
 1. Right-click the extension's icon and choose Options.
-2. Under Plan, choose AI plan.
-3. Go to tokenfactory.nebius.com, sign in or make an account, and create an API key.
+2. Go to tokenfactory.nebius.com, sign in or make an account, and create an API key.
    Copy it.
-4. Paste it under "Nebius key, for NVIDIA Nemotron" and click Save.
-5. Click Check the key. It should end with Lightning ✓ Super ✓ Ultra ✓.
-6. Recommended: in your Nebius account profile, switch on Zero Data Retention, so Nebius
+3. Paste it under "Nebius key, for NVIDIA Nemotron" and click Save.
+4. Click Check the key. It should end with Lightning ✓ Super ✓ Ultra ✓.
+5. Recommended: in your Nebius account profile, switch on Zero Data Retention, so Nebius
    doesn't keep what Pareto sends it.
 
 Jev key (optional, the fastest way to find the answer)

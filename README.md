@@ -6,7 +6,7 @@ It finds the answer with [Jev](https://docs.typesafe.ai) from TypeSafe AI. On a 
 
 Everything else that needs a model runs on **NVIDIA Nemotron**, served by **Nebius Token Factory**. Nemotron 3 Super writes the short answer, Nemotron 3 Ultra thinks harder about questions that need the whole page (⌘ Enter), and Nemotron 3.5 Lightning finds the answer whenever Jev can't. With only a Nebius key, Pareto works end to end on Nemotron. See [Nemotron on Nebius Token Factory](#nemotron-on-nebius-token-factory).
 
-There are two plans. **Free** finds words as you type, on your computer only. The **AI plan** adds search by meaning and AI answers. For now the plan is a switch in settings, with no payments. The plan page is [here](https://claude.ai/artifact/2w17FYYvgxQPHXwvAoF3pd). It's private, so only its owner can open it until they share it.
+Without a key, it finds words as you type, on your computer only. Add a Jev or Nebius key and it also searches by meaning and writes AI answers.
 
 **There's a Mac app too:** a search bar for the whole Mac (⌥ Space). It opens apps and files in plain English, answers questions about the window in front (PDFs included), and takes voice. It lives in its own repo: [pareto-mac](https://github.com/zohane112/pareto-mac).
 
@@ -18,7 +18,7 @@ More screenshots: [compare mode](docs/compare.png) and [settings](docs/settings.
 
 1. **Load the extension:** open `chrome://extensions` and turn on **Developer mode** (top right). Then click **Load unpacked** and choose the `extension` folder. If it's already loaded, click the reload arrow on its card instead.
 
-2. **Pick a plan and add your keys:** on the extension's card, click **Details**, then **Extension options**. Under **Plan**, choose **Free** or **AI plan**. The AI plan needs a Nebius key, a Jev key, or both:
+2. **Add your keys (optional):** on the extension's card, click **Details**, then **Extension options**. Search by meaning needs a Nebius key, a Jev key, or both:
    - **Nebius key (Nemotron):** get one at [tokenfactory.nebius.com](https://tokenfactory.nebius.com/), paste it under **Nebius key, for NVIDIA Nemotron**, and click **Save**. Click **Check the key**: it should show Lightning ✓ Super ✓ Ultra ✓. This one key covers finding, written answers and think harder.
    - **Jev key (optional, fastest finding):** paste a key from [console.typesafe.ai/keys](https://console.typesafe.ai/keys) under **Jev API key** and click **Save**.
    - **Privacy:** in your Nebius account profile, switch on **Zero Data Retention**. Until it's on, Nebius keeps what it's sent.
@@ -52,7 +52,7 @@ Chrome doesn't let extensions run on its own pages: `chrome://` pages, the New T
 | --- | --- |
 | **Control+Shift+F** | Open the box. You can change this key in settings. |
 | **Type** | Words light up on the page as you type, like normal Ctrl+F. |
-| **Enter** | AI plan: search by meaning. Free: go to the next word match. |
+| **Enter** | With a key: search by meaning. Without one: go to the next word match. |
 | **⌘ Enter** (Ctrl+Enter on Windows) | Think harder: Nemotron 3 Ultra reads the whole page, answers, and highlights the parts it used. |
 | **↑ ↓** | Step through the matches. Matches rated under 2% are skipped. |
 | **Shift+↑ ↓** | Step through word-for-word matches. |
@@ -117,16 +117,16 @@ Press **Option+Enter** (Alt+Enter) instead of Enter. The same search goes to Jev
 
 The second model is Nemotron 3.5 Lightning when answers come from Nemotron, or whichever other AI settings picks. Run through the AI tools on this Mac, their start-up time counts against them, so the times aren't a fair race.
 
-## Plans
+## With and without a key
 
-| | Free | AI plan |
+| | No key | Jev or Nebius key |
 | --- | --- | --- |
 | Words light up as you type | ✓ | ✓ |
 | Search by meaning with Jev or Nemotron, the exact sentence, its sources | | ✓ |
 | AI answers, think harder | | ✓ |
 | What leaves your computer | nothing | see Privacy |
 
-Switch plans in settings under **Plan**. The background worker checks the plan too, so the free plan never contacts Jev, Nebius or any other AI. Someone with a Jev or Nebius key saved starts on the AI plan. The **See the AI plan** links go to our plan page. To change where they go, edit `UPGRADE_URL` in `extension/background.js`. 
+The background worker checks too: with no Jev or Nebius key saved, it never contacts Jev, Nebius or any other AI.
 
 ## Why it's fast
 
@@ -136,8 +136,8 @@ Switch plans in settings under **Plan**. The background worker checks the plan t
 
 ## Privacy
 
-- On the free plan, nothing leaves your computer.
-- On the AI plan, page text goes to Jev to find the answer, or to Nebius when Lightning finds it or Ultra thinks harder. The question and the best-matching excerpts go to whichever AI you picked for answers (Nemotron 3 Super on Nebius by default), and nowhere else.
+- With no key saved, nothing leaves your computer.
+- With a key, page text goes to Jev to find the answer, or to Nebius when Lightning finds it or Ultra thinks harder. The question and the best-matching excerpts go to whichever AI you picked for answers (Nemotron 3 Super on Nebius by default), and nowhere else.
 - Nebius keeps what it's sent unless **Zero Data Retention** is switched on for the account. Switch it on in your Nebius account profile.
 - Nothing typed into the page's own form fields, text boxes, or password fields is ever read.
 - Keys are stored with `chrome.storage.local` in this browser only. Scripts running in web pages can't read them. Only the extension's background worker uses them.

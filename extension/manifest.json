@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Pareto",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Ctrl+F by meaning. Ask a question about the page and jump to the sentence that answers it, with its sources and an answer from NVIDIA Nemotron.",
   "permissions": [
     "activeTab",

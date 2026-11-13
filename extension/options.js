@@ -1,4 +1,4 @@
-// Settings page: saves the plan, the keys and the AI-answer choices, checks the Nebius key and
+// Settings page: saves the keys and the AI-answer choices, checks the Nebius key and
 // the local AI bridge, and shows the shortcut. Saved keys are never shown again, even here.
 
 const $ = (id) => document.getElementById(id);
@@ -8,12 +8,6 @@ function state(el, text, good) {
   el.className = `state${good === undefined ? "" : good ? " good" : " bad"}`;
 }
 
-// Same rule as the background worker: someone with a Jev or Nebius key saved starts on the
-// AI plan.
-function showPlan(plan) {
-  document.querySelectorAll("input[name=plan]").forEach((r) => (r.checked = r.value === plan));
-  document.body.classList.toggle("plan-free", plan === "free");
-}
 
 // Must match CtrlF.AI_DEFAULTS in ai.js. This page can't see the worker's globals.
 const HOSTED_DEFAULTS = { baseUrl: "https://api.openai.com/v1", model: "gpt-5.6-luna" };
@@ -42,12 +36,11 @@ async function refresh() {
   const s = await chrome.storage.local.get([
     "jevApiKey", "nebiusApiKey", "hostedApiKey", "hostedBaseUrl", "hostedModel",
     "nebiusBaseUrl", "nebiusFastModel", "nebiusAnswerModel", "nebiusDeepModel",
-    "aiProvider", "aiAuto", "plan", "look",
+    "aiProvider", "aiAuto", "look",
   ]);
   const look = s.look === "terminal" ? "terminal" : "digital";
   document.body.dataset.look = look;
   document.querySelectorAll("input[name=look]").forEach((r) => (r.checked = r.value === look));
-  showPlan(s.plan === "ai" || s.plan === "free" ? s.plan : s.jevApiKey || s.nebiusApiKey ? "ai" : "free");
   state($("jev-state"), s.jevApiKey ? "A Jev key is saved." : "No Jev key saved yet.", !!s.jevApiKey);
   state($("nebius-state"), s.nebiusApiKey ? "A Nebius key is saved." : "No Nebius key saved yet.", !!s.nebiusApiKey);
   $("nebius-base").value = s.nebiusBaseUrl ?? "";
@@ -75,16 +68,6 @@ saveKey("jev-form", "jev-key", "jevApiKey", "jev-state", "Your Jev");
 saveKey("nebius-form", "nebius-key", "nebiusApiKey", "nebius-state", "Your Nebius");
 saveKey("hosted-form", "hosted-key", "hostedApiKey", "hosted-state", "Your hosted AI");
 
-document.querySelectorAll("input[name=plan]").forEach((radio) =>
-  radio.addEventListener("change", async () => {
-    await chrome.storage.local.set({ plan: radio.value });
-    showPlan(radio.value);
-  }),
-);
-$("upgrade").addEventListener("click", (event) => {
-  event.preventDefault();
-  chrome.runtime.sendMessage({ type: "openUpgrade" });
-});
 
 document.querySelectorAll("input[name=provider]").forEach((radio) =>
   radio.addEventListener("change", async () => {

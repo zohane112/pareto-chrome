@@ -234,7 +234,7 @@
             </div>
             <div class="status" role="status"></div>
             <div class="meter" aria-hidden="true" hidden><i></i></div>
-            <p class="plan" hidden>Meaning search and AI answers are part of the AI plan. <a href="#" class="upgrade">See the AI plan</a></p>
+            <p class="plan" hidden>Search by meaning and AI answers need a Jev or Nebius key. <a href="#" class="upgrade">Add one in settings</a></p>
             <section class="panel ai" hidden>
               <div class="label ai-label">answer</div>
               <div class="content"><p class="answer"></p>
@@ -406,8 +406,8 @@
       for (const r of ranges) layer.add(r);
     };
 
-    // Free: word-for-word find only, on this computer. AI plan: meaning search with Jev, and
-    // AI answers. Until the worker answers, assume the AI plan so Enter isn't lost.
+    // No key: word-for-word find only, on this computer. With a key: meaning search with Jev,
+    // and AI answers. Until the worker answers, assume a key so Enter isn't lost.
     let settings = { plan: "ai", aiProvider: "nemotron", aiAuto: true, hasJevKey: true, hasNebiusKey: false, hasHostedKey: true };
     const aiPlan = () => settings.plan === "ai";
     const hasFinder = () => settings.hasJevKey || settings.hasNebiusKey;
@@ -450,7 +450,7 @@
         : "This page is too long to search, even for Nemotron."),
       timeout: (e) => `${who(e)} took too long to answer. Try again.`,
       offline: (e) => `Couldn't reach ${who(e)}. Check your internet connection and try again.`,
-      "free-plan": () => "Meaning search is part of the AI plan.",
+      "free-plan": () => "Search by meaning needs a Jev or Nebius key.",
       "jev-error": (e) => `${who(e)} returned an error${e.status ? ` (${e.status})` : ""}. Try again.`,
       slow: () => "No answer in time. Try again in a moment.",
       reload: () => "The extension was updated since this page opened. Reload the page, then try again.",
@@ -1049,8 +1049,8 @@
         }
       });
     }
-    // Enter searches by meaning on the AI plan, Option+Enter (Alt+Enter) also runs compare,
-    // and ⌘ Enter (Ctrl+Enter) thinks harder with Nemotron 3 Ultra. On the free plan, Enter
+    // With a key, Enter searches by meaning, Option+Enter (Alt+Enter) also runs compare,
+    // and ⌘ Enter (Ctrl+Enter) thinks harder with Nemotron 3 Ultra. With no key, Enter
     // steps through the word matches like Ctrl+F.
     // This listener sits on the input itself, because the closed shadow root hides the input
     // from the host's listeners.
@@ -1086,7 +1086,7 @@
     });
     $(".upgrade").addEventListener("click", (event) => {
       event.preventDefault();
-      ask("openUpgrade");
+      ask("openSettings");
     });
 
     // Drag the window by the row around the question, or by the key hints at the bottom.
