@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Search box test</title>
+<!-- Opens the real search box with a fake chrome.runtime, so its layout and messages can be checked without Chrome or Jev. Serve the project folder, open /tests/searchbox-test.html, load /extension/searchbox.js, open the box with Control+Shift+F or window.__ctrlfByMeaning.open(), then type in the box and press Enter (search replies come from window.nextReply). For the real thing, use tests/chrome-check.mjs. -->
+<!-- In Chrome, the manifest loads highlight.css into the page; here the page links it. -->
+<link rel="stylesheet" href="../extension/highlight.css"></head>
+<body>
+<main>
+<h1>Test page</h1>
+<h2>History</h2>
+<p>Game playing programs have been used since the 1950s to demonstrate and test AI's most advanced techniques. Deep Blue became the first computer chess-playing system to beat a reigning world chess champion, Garry Kasparov, on 11 May 1997.</p>
+<p>The field of AI research was founded at a workshop at Dartmouth College in 1956. The attendees became the leaders of AI research in the 1960s.</p>
+<h2>Kinds of learning</h2>
+<ul><li>Supervised learning</li><li>Unsupervised learning</li><li>Reinforcement learning</li></ul>
+<div style="height: 1600px"></div>
+<h2>Energy</h2>
+<p>Power consumption by AI is responsible for an increase in fossil fuel use, and a ChatGPT search involves the use of 10 times the electrical energy as a Google search.</p>
+<div style="height: 1200px"></div>
+</main>
+<script>
+  // Test stand-ins: an open shadow root so the test can read the box, and a fake
+  // chrome.runtime whose replies the test sets in window.nextReply.
+  const attach = Element.prototype.attachShadow;
+  Element.prototype.attachShadow = function (init) { return attach.call(this, { ...init, mode: "open" }); };
+  window.sent = [];
+  window.chrome = { runtime: { id: "test", onMessage: { addListener() {} }, sendMessage: async (msg) => {
+    window.sent.push(msg);
+    if (msg.type === "settings") return { result: { plan: "ai", aiProvider: "off", aiAuto: false, hasJevKey: true } };
+    if (msg.type === "sentence") return { result: { index: 0 } };
+    const reply = window.nextReply;
+    await new Promise((r) => setTimeout(r, reply?.delay ?? 50));
+    if (reply?.throw) { if (reply.gone) delete chrome.runtime.id; throw new Error(reply.throw); }
+    return reply;
+  } } };
+</script>
+<script src="../extension/pagereader.js"></script>
+<script src="../extension/chunker.js"></script>
+<script src="../extension/textmap.js"></script>
+<script src="../extension/citations.js"></script>
+<script src="../extension/wordfind.js"></script>
+</body></html>

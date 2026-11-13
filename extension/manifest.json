@@ -1,0 +1,80 @@
+{
+  "manifest_version": 3,
+  "name": "Pareto",
+  "version": "1.6.0",
+  "description": "Ctrl+F by meaning. Ask a question about the page and jump to the sentence that answers it, with its sources and an answer from NVIDIA Nemotron.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "nativeMessaging"
+  ],
+  "host_permissions": [
+    "https://api.typesafe.ai/*",
+    "https://api.openai.com/*",
+    "https://api.tokenfactory.us-central1.nebius.com/*",
+    "https://api.tokenfactory.nebius.com/*"
+  ],
+  "optional_host_permissions": [
+    "https://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "pagereader.js",
+        "chunker.js",
+        "textmap.js",
+        "citations.js",
+        "wordfind.js",
+        "searchbox.js"
+      ],
+      "css": [
+        "highlight.css"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Pareto (Control+Shift+F)",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "commands": {
+    "open-search": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+F",
+        "mac": "MacCtrl+Shift+F"
+      },
+      "description": "Open the search box"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "fonts/*.ttf"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
+}

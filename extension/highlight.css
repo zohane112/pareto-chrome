@@ -1,0 +1,25 @@
+/* Colours for the highlights Pareto draws on the page. It's loaded into every page
+   with the box. The highlights themselves use the CSS Custom Highlight API (CSS.highlights),
+   so no page element is added or changed. Later names paint on top.
+   Meaning (from Jev): the paragraph in pale grey, and the sentence that answers inverted to
+   black, like a terminal selection. Word for word: grey, and the one the arrows are on in amber. */
+
+::highlight(ctrlf-match) {        /* the matched paragraph */
+  background-color: #ececE8;
+  color: #0c0c0c;
+}
+
+::highlight(ctrlf-sentence) {     /* the sentence that answers */
+  background-color: #0c0c0c;
+  color: #f6f6f3;
+}
+
+::highlight(ctrlf-word) {         /* word-for-word matches */
+  background-color: #d9d9d3;
+  color: #0c0c0c;
+}
+
+::highlight(ctrlf-word-now) {     /* the word-for-word match the arrows are on */
+  background-color: #f5a000;
+  color: #0c0c0c;
+}

@@ -1,0 +1,9 @@
+#!/bin/bash
+# Starts the local AI bridge (bridge.mjs) for Chrome. Chrome launches native hosts with a
+# bare PATH, so look for Node where it's usually installed.
+DIR="$(cd "$(dirname "$0")" && pwd)"
+for NODE in "$HOME/.local/bin/node" /opt/homebrew/bin/node /usr/local/bin/node "$(command -v node)"; do
+  if [ -x "$NODE" ]; then exec "$NODE" "$DIR/bridge.mjs" "$@"; fi
+done
+echo "Ctrl+F by meaning: Node.js not found" >&2
+exit 1
